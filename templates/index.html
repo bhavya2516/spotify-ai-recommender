@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Spotify AI Song Recommender</title>
+
+<style>
+
+/* -------- GLOBAL -------- */
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:linear-gradient(-45deg,#1DB954,#a8ff78,#f5f5f5,#ffffff);
+background-size:400% 400%;
+animation:bgMove 15s ease infinite;
+text-align:center;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* -------- FILM GRAIN -------- */
+
+body::after{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+background-image:url("https://grainy-gradients.vercel.app/noise.svg");
+opacity:0.07;
+}
+
+/* -------- SPLASH SCREEN -------- */
+
+#splash{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:white;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.logo{
+font-size:50px;
+font-weight:bold;
+letter-spacing:3px;
+animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-15px)}
+100%{transform:translateY(0)}
+}
+
+.enter-btn{
+margin-top:30px;
+padding:12px 28px;
+border-radius:30px;
+border:none;
+background:#1DB954;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+/* -------- MAIN DASHBOARD -------- */
+
+#main{
+display:none;
+padding-top:60px;
+}
+
+/* -------- MUSIC WAVE HEADER -------- */
+
+.wave{
+display:flex;
+justify-content:center;
+margin-bottom:25px;
+}
+
+.bar{
+width:6px;
+height:20px;
+background:#1DB954;
+margin:3px;
+animation:wave 1s infinite ease-in-out;
+}
+
+.bar:nth-child(2){animation-delay:0.1s}
+.bar:nth-child(3){animation-delay:0.2s}
+.bar:nth-child(4){animation-delay:0.3s}
+.bar:nth-child(5){animation-delay:0.4s}
+
+@keyframes wave{
+0%,100%{height:15px}
+50%{height:40px}
+}
+
+/* -------- SEARCH CARD -------- */
+
+.container{
+width:420px;
+margin:auto;
+padding:30px;
+border-radius:12px;
+backdrop-filter:blur(12px);
+background:rgba(255,255,255,0.6);
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+input{
+width:90%;
+padding:12px;
+margin:10px;
+border-radius:6px;
+border:1px solid #ddd;
+font-size:16px;
+}
+
+button{
+padding:12px 22px;
+border:none;
+border-radius:6px;
+background:#1DB954;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+/* -------- RESULTS -------- */
+
+.result{
+margin-top:35px;
+}
+
+.song-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+width:80%;
+margin:auto;
+margin-top:20px;
+}
+
+.song-card{
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 6px 15px rgba(0,0,0,0.1);
+transition:transform .2s;
+}
+
+.song-card:hover{
+transform:scale(1.05);
+}
+
+.visual-btn{
+margin-top:30px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SPLASH SCREEN -->
+
+<div id="splash">
+
+<div class="logo">Spotify AI</div>
+
+<button class="enter-btn" onclick="enterSite()">Enter →</button>
+
+</div>
+
+<!-- MAIN PAGE -->
+
+<div id="main">
+
+<h1>Spotify AI Song Recommender 🎵</h1>
+
+<!-- MUSIC WAVE -->
+
+<div class="wave">
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+
+<div class="container">
+
+<form action="/recommend" method="post">
+
+<input
+type="text"
+name="song"
+placeholder="Search a song (Example: Believer)"
+required
+
+>
+
+<br>
+
+<button type="submit">Recommend Songs</button>
+
+</form>
+
+</div>
+
+<div class="result">
+
+<h2>{{ prediction }}</h2>
+
+{% if songs %}
+
+<div class="song-grid">
+
+{% for song in songs %}
+
+<div class="song-card">
+🎵 {{ song }}
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endif %}
+
+</div>
+
+<div class="visual-btn">
+
+<a href="/visualize">
+
+<button>View Cluster Visualization</button>
+
+</a>
+
+</div>
+
+</div>
+
+<script>
+
+function enterSite(){
+document.getElementById("splash").style.opacity="0";
+
+setTimeout(()=>{
+document.getElementById("splash").style.display="none";
+document.getElementById("main").style.display="block";
+},800);
+}
+
+setTimeout(()=>{
+enterSite();
+},3800);
+
+</script>
+
+</body>
+
+</html>
+{% for song in songs %}
+<li>{{ song[0] }} - {{ song[1] }}</li>
+{% endfor %}
